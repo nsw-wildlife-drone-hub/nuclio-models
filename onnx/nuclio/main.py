@@ -25,7 +25,7 @@ def init_context(context):
 
 
 def handler(context, event):
-    context.logger.info("Run YoloV7 ONNX model")
+    context.logger.info("Run YoloV8 ONNX model")
     data = event.body
     buf = io.BytesIO(base64.b64decode(data["image"]))
     threshold = float(data.get("threshold", 0.5))
@@ -35,3 +35,4 @@ def handler(context, event):
 
     return context.Response(body=json.dumps(results), headers={},
         content_type='application/json', status_code=200)
+

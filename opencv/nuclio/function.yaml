@@ -1,0 +1,49 @@
+metadata:
+  name: opencv-track
+  namespace: opencv
+  annotations:
+    name: opencv-track
+    type: tracker
+    spec:
+    framework: pytorch
+
+spec:
+  description: Fast Online Object Tracking and Segmentation
+  runtime: 'python:3.8.10'
+  handler: main:handler
+  eventTimeout: 30s
+  env:
+    - name: PYTHONPATH
+      value: /opt/nuclio/opencv:/opt/nuclio/opencv
+
+  build:
+    image: cvat.opencv
+    baseImage: ubuntu:20.04
+
+    directives:
+      preCopy:
+        - kind: USER
+          value: root
+        - kind: RUN
+          value: apt update 
+        - kind: RUN
+          value: pip install opencv-contrib-python==4.7.0.72
+        - kind: WORKDIR
+          value: /opt/nuclio
+        - kind: RUN
+          value: ln -s /usr/bin/python3 /usr/bin/python
+
+  triggers:
+    myHttpTrigger:
+      maxWorkers: 3
+      kind: 'http'
+      workerAvailabilityTimeoutMilliseconds: 10000
+      attributes:
+        maxRequestBodySize: 33554432 # 32MB
+
+  platform:
+    attributes:
+      restartPolicy:
+        name: always
+        maximumRetryCount: 3
+      mountMode: volume
