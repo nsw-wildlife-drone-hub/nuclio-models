@@ -27,7 +27,7 @@ spec:
         - kind: ARG
           value: PATH="/root/miniconda3/bin:${PATH}"
         - kind: RUN
-          value: apt update && apt-get install libglib2.0-0
+          value: apt update && apt install -y --no-install-recommends wget ca-certificates libgl1 libglib2.0-0 && rm -rf /var/lib/apt/lists/*
         - kind: RUN
           value: wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh &&
             chmod +x Miniconda3-latest-Linux-x86_64.sh && bash Miniconda3-latest-Linux-x86_64.sh -b &&
@@ -39,7 +39,7 @@ spec:
         - kind: SHELL
           value: '["conda", "run", "-n", "cvat", "/bin/bash", "-c"]'
         - kind: RUN
-          value: pip install opencv-contrib-python==4.7.0.72
+          value: pip install opencv-contrib-python==4.7.0.72 Pillow==9.3.0 numpy==1.24.3
         - kind: ENTRYPOINT
           value: '["conda", "run", "-n", "cvat"]'
 

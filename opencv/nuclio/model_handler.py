@@ -9,6 +9,7 @@ import numpy as np
 class ModelHandler:
     def __init__(self):
         self.tracker = cv2.legacy.TrackerMedianFlow_create()
+        self.state = None
 
     def infer(self, image, shape, state):
         image = np.array(image)
@@ -19,15 +20,16 @@ class ModelHandler:
             w = x1 - x2
             h = y1 - y2
             bbox = [x1, y1, w, h]
-            state = copy(self.tracker)
-            state.init(image, bbox)
+            self.state = copy(self.tracker)
+            self.state.init(image, bbox)
             
         # track
         else:
-            _, bbox = state.update(image)
+            _, bbox = self.state.update(image)
             x1, y1, w, h = bbox
             x2 = x1 + w
             y2 = y1 + h
             shape = [x1, y1, x2, y2]
 
+        state = None
         return shape, state
