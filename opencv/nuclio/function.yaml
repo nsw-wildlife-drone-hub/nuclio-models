@@ -1,6 +1,6 @@
 metadata:
   name: opencv-track
-  namespace: opencv
+  namespace: cvat
   annotations:
     name: opencv-track
     type: tracker
@@ -14,7 +14,7 @@ spec:
   eventTimeout: 30s
   env:
     - name: PYTHONPATH
-      value: /opt/nuclio/opencv:/opt/nuclio/opencv
+      value: /opt/nuclio/opencv
 
   build:
     image: cvat.opencv
@@ -27,7 +27,7 @@ spec:
         - kind: ARG
           value: PATH="/root/miniconda3/bin:${PATH}"
         - kind: RUN
-          value: apt update && apt-get install -y python3-pip libglib2.0-0
+          value: apt update && apt-get install libglib2.0-0
         - kind: RUN
           value: wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh &&
             chmod +x Miniconda3-latest-Linux-x86_64.sh && bash Miniconda3-latest-Linux-x86_64.sh -b &&
