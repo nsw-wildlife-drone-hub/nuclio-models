@@ -22,16 +22,27 @@ spec:
 
     directives:
       preCopy:
-        - kind: USER
-          value: root
+        - kind: ENV
+          value: PATH="/root/miniconda3/bin:${PATH}"
+        - kind: ARG
+          value: PATH="/root/miniconda3/bin:${PATH}"
         - kind: RUN
           value: apt update && apt-get install -y python3-pip libglib2.0-0
         - kind: RUN
-          value: pip install opencv-contrib-python==4.7.0.72
+          value: wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh &&
+            chmod +x Miniconda3-latest-Linux-x86_64.sh && bash Miniconda3-latest-Linux-x86_64.sh -b &&
+            rm -f Miniconda3-latest-Linux-x86_64.sh
         - kind: WORKDIR
           value: /opt/nuclio
         - kind: RUN
-          value: ln -s /usr/bin/python3 /usr/bin/python
+          value: conda create -y -n cvat python=3.8
+        - kind: SHELL
+          value: '["conda", "run", "-n", "cvat", "/bin/bash", "-c"]'
+        - kind: RUN
+          value: pip install opencv-contrib-python==4.7.0.72
+        - kind: ENTRYPOINT
+          value: '["conda", "run", "-n", "cvat"]'
+
 
   triggers:
     myHttpTrigger:
