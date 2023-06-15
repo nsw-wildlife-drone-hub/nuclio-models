@@ -5,7 +5,6 @@
 import cv2
 import numpy as np
 
-from copy import copy
 from PIL import Image
 
 class ModelHandler:
@@ -27,7 +26,7 @@ class ModelHandler:
             w = x1 - x2
             h = y1 - y2
             bbox = [x1, y1, w, h]
-            tracker = copy(self.tracker)
+            tracker = self.tracker
             
             ret = tracker.init(prev_image, bbox)
             ret, bbox = tracker.update(image)

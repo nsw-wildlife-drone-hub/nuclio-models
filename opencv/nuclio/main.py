@@ -16,9 +16,10 @@ def init_context(context):
 def handler(context, event):
     context.logger.info("Run OpenCV tracker...")
     data = event.body
-    buf = io.BytesIO(base64.b64decode(data["image"]))
     shapes = data.get("shapes")
     states = data.get("states")
+    buf = io.BytesIO(base64.b64decode(data["image"]))
+    states = io.BytesIO(base64.b64decode(states))
     image = Image.open(buf)
 
     results = {
