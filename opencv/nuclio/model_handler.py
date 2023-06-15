@@ -22,7 +22,7 @@ class ModelHandler:
         else:
             state = io.BytesIO(base64.b64decode(state))
             prev_image = Image.open(state)
-            state = np.array(state)
+            image = np.array(image)
             prev_image = np.array(prev_image)
             
             x1, y1, x2, y2 = shape
