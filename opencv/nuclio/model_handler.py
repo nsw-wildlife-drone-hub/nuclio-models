@@ -9,27 +9,29 @@ import numpy as np
 class ModelHandler:
     def __init__(self):
         self.tracker = cv2.legacy.TrackerMedianFlow_create()
-        self.state = None
 
     def infer(self, image, shape, state):
         image = np.array(image)
+        state = np.array(state)
+        
+        x1, y1, x2, y2 = shape
+        w = x1 - x2
+        h = y1 - y2
+        bbox = [x1, y1, w, h]
         
         # init tracking
         if state is None: 
-            x1, y1, x2, y2 = shape
-            w = x1 - x2
-            h = y1 - y2
-            bbox = [x1, y1, w, h]
-            self.state = copy(self.tracker)
-            self.state.init(image, bbox)
+            pass
             
         # track
         else:
-            _, bbox = self.state.update(image)
-            x1, y1, w, h = bbox
-            x2 = x1 + w
-            y2 = y1 + h
-            shape = [x1, y1, x2, y2]
+            tracker = copy(self.tracker)
+            ret = tracker.init(state, bbox)
+            ret, bbox = tracker.update(image)
+            
+        x1, y1, w, h = bbox
+        x2 = x1 + w
+        y2 = y1 + h
+        shape = [x1, y1, x2, y2]
 
-        state = None
-        return shape, state
+        return shape

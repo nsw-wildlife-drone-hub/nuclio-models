@@ -25,10 +25,10 @@ def handler(context, event):
         'shapes': [],
         'states': []
     }
-    for i, shape in enumerate(shapes):
-        shape, state = context.user_data.model.infer(image, shape, states[i] if i < len(states) else None)
+    for shape in shapes:
+        shape = context.user_data.model.infer(image, shape, states)
         results['shapes'].append(shape)
-        results['state'].append(state)
+    results['state'] = data["image"]
 
     return context.Response(body=json.dumps(results), headers={},
         content_type='application/json', status_code=200)
