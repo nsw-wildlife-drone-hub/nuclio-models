@@ -2,6 +2,8 @@
 #
 # SPDX-License-Identifier: MIT
 
+import io
+import base64
 import cv2
 import numpy as np
 
@@ -18,6 +20,7 @@ class ModelHandler:
             
         # track
         else:
+            state = io.BytesIO(base64.b64decode(state))
             prev_image = Image.open(state)
             state = np.array(state)
             prev_image = np.array(prev_image)

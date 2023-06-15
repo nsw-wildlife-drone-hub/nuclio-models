@@ -19,7 +19,6 @@ def handler(context, event):
     shapes = data.get("shapes")
     states = data.get("states")
     buf = io.BytesIO(base64.b64decode(data["image"]))
-    states = io.BytesIO(base64.b64decode(states))
     image = Image.open(buf)
 
     results = {
