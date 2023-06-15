@@ -1,9 +1,8 @@
-import base64
-import io
 import json
-
-from model_handler import ModelHandler
+import base64
 from PIL import Image
+import io
+from model_handler import ModelHandler
 
 def init_context(context):
     context.logger.info("Init context...  0%")
@@ -15,7 +14,7 @@ def init_context(context):
     context.logger.info("Init context...100%")
 
 def handler(context, event):
-    context.logger.info("Run SiamMask model")
+    context.logger.info("Run OpenCV tracker...")
     data = event.body
     buf = io.BytesIO(base64.b64decode(data["image"]))
     shapes = data.get("shapes")
@@ -26,10 +25,10 @@ def handler(context, event):
         'shapes': [],
         'states': []
     }
-    for i, shape in enumerate(shapes):
-        shape, state = context.user_data.model.infer(image, shape, states[i] if i < len(states) else None)
+    for shape in shapes:
+        shape = context.user_data.model.infer(image, shape, states)
         results['shapes'].append(shape)
-        results['states'].append(state)
+    results['state'] = data["image"]
 
     return context.Response(body=json.dumps(results), headers={},
         content_type='application/json', status_code=200)
